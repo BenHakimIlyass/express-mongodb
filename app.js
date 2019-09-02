@@ -1,32 +1,42 @@
 import express from "express";
-import router from "./routes/index.js";
 import bodyParser from "body-parser";
-const db = require("./config/keys").mongoURI;
-
 import mongoose from "mongoose";
-const MongoClient = require("mongodb").MongoClient;
+import config from "./config/db";
+import cors from "cors";
 
-const url = "mongodb://localhost:27017/mytestdb";
+import router from "./routes/offre";
+// import offreRoute from "./routes/offre";
 
-//setting db connection
-mongoose
-  .connect(url, { useNewUrlParser: true })
-  .then(() => {
-    console.log("MongoDB Connected");
-  })
-  .catch(err => {
-    console.log(err);
-    console.log("\x1b[31m\x1b[1m MongoDB Not Connected");
-  });
+//db connection
+mongoose.connect(config.database, { useNewUrlParser: true });
+mongoose.connection.on("connected", () => {
+  console.log("Connected to database  " + config.database);
+});
+mongoose.connection.on("error", err => {
+  console.log("Database error: " + err);
+});
 
-// Set up the express app
 const app = express();
+//handeling cors
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", true);
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origins,X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  if (req.method === "OPTIONS") {
+    res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
+    return res.status(200).json({});
+  }
+  next();
+});
+
+app.use(router);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(router);
 
 const PORT = 5000;
-
 app.listen(PORT, () => {
   console.log(`server running on port ${PORT}`);
 });
