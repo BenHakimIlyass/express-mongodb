@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const config = require('./config/db');
 
 import user from "./routes/user";
-//import offre from "./routes/offre";
+import offre from "./routes/offre";
 
 // Connect To Database
 mongoose.connect(config.database, {
@@ -27,7 +27,7 @@ const app = express();
 
 
 // Port Number
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 6000;
 
 // CORS Middleware
 app.use(cors());
@@ -38,7 +38,7 @@ app.use(bodyParser.json());
 
 
 app.use(user);
-//app.use(offre);
+app.use(offre);
 
 // Index Route
 app.get('/', (req, res) => {

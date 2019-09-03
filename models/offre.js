@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-var Schema = mongoose.Schema;
 
 // create a schema
 const OffreSchema = mongoose.Schema({
@@ -15,8 +14,11 @@ const OffreSchema = mongoose.Schema({
   price: {
     type: String
   },
-  workerName: String,
-  date: String
+  idcreateur:{
+    type: String
+  },
+
 });
 
-const Offre = (module.exports = mongoose.model("Offre", OffreSchema));
+const Offre = module.exports = mongoose.model('Offre', OffreSchema);
+
